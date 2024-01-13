@@ -1,5 +1,16 @@
-import React from 'react';
+import React from "react";
+import Header from "./components/Header";
+import Container from "./components/Container";
+import Footer from "./components/Footer";
 
-const App: React.FC = () => <h1>Plan your trip!</h1>;
+const App: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <Container />
+      <Footer />
+    </div>
+  );
+};
 
 export default App;
