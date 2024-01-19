@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import SearchResults from "../SearchResults";
 import { LOCATIONS_URL, PRODUCTS_URL } from "./constants";
 import { CountryLocations, Product } from "./types";
+import Loader from "../Loader";
 
 export default function Container() {
   const {
@@ -41,7 +42,11 @@ export default function Container() {
   }
 
   if (locationsLoading || productsLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className={css.loaderContainer}>
+        <Loader color="#4e2870" duration={1} size={36} text="Loading..." />
+      </div>
+    );
   }
 
   const filtersSelected = country && city && date;
@@ -65,6 +70,7 @@ export default function Container() {
           />
         </div>
         <DateSelection setDate={setDate} disabled={!country || !city} />
+        <hr className={css.hrStyle} />
 
         {!filtersSelected && (
           <div className={css.selectFilterText}>Select filters first</div>
