@@ -41,14 +41,6 @@ export default function Container() {
     return <div>Error</div>;
   }
 
-  if (locationsLoading || productsLoading) {
-    return (
-      <div className={css.loaderContainer}>
-        <Loader color="#4e2870" duration={1} size={36} text="Loading..." />
-      </div>
-    );
-  }
-
   const filtersSelected = country && city && date;
 
   return (
@@ -59,7 +51,7 @@ export default function Container() {
             options={Object.keys(locations ?? {})}
             label="Country"
             onChange={handleCountryChange}
-            disabled={!locations}
+            disabled={locationsLoading || !locations}
           />
           <Filter
             options={country && locations ? locations[country] : []}
@@ -69,14 +61,23 @@ export default function Container() {
             isCity
           />
         </div>
-        <DateSelection setDate={setDate} disabled={!country || !city} />
+        <DateSelection
+          setDate={setDate}
+          date={date}
+          disabled={!country || !city}
+        />
         <hr className={css.hrStyle} />
 
         {!filtersSelected && (
           <div className={css.selectFilterText}>Select filters first</div>
         )}
+        {productsLoading && (
+          <div className={css.loaderContainer}>
+            <Loader color="#4e2870" duration={1} size={36} text="Loading..." />
+          </div>
+        )}
         {filtersSelected && products && <SearchResults products={products} />}
-        {filtersSelected && !products && (
+        {filtersSelected && (products?.length === 0) && (
           <div className={css.noResults}>
             Nothing found, please try a different date
           </div>

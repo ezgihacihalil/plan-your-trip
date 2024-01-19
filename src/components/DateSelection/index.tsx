@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, {useMemo } from "react";
 import css from "./style.module.css";
 import useFetch from "../../hooks/useFetch";
 import { AVAILABLE_DATES } from "../Filter/constants";
@@ -7,14 +7,12 @@ import { formatDate } from "./utils";
 import DateButton from "../DateButton";
 
 const DateSelection: React.FC<DateSelectionProps> = React.memo(
-  ({ setDate, disabled }) => {
+  ({ setDate, date, disabled }) => {
     const {
       data: dateResponse,
       loading: datesLoading,
       error: datesError,
     } = useFetch<string[]>(AVAILABLE_DATES);
-
-    const [selectedDate, setSelectedDate] = useState("");
 
     const formattedDates = useMemo(
       () =>
@@ -24,8 +22,7 @@ const DateSelection: React.FC<DateSelectionProps> = React.memo(
       [dateResponse, formatDate]
     );
 
-    const handleDateClick = (date: string, originalDate: string) => {
-      setSelectedDate(originalDate);
+    const handleDateClick = (originalDate: string) => {
       setDate(originalDate);
     };
 
@@ -39,19 +36,18 @@ const DateSelection: React.FC<DateSelectionProps> = React.memo(
           Date
         </label>
         <div className={css.dateButtons}>
-          {formattedDates?.map((date: FormattedDateType | null) => {
-            if (date === null) {
+          {formattedDates?.map((item: FormattedDateType | null) => {
+            if (item === null) {
               return null;
             }
 
-            const { formatted, original } = date;
+            const { formatted, original } = item;
             return (
               <DateButton
                 key={original}
                 formatted={formatted}
-                original={original}
-                selectedDate={selectedDate}
-                handleDateClick={() => handleDateClick(formatted, original)}
+                isSelected={original === date}
+                handleDateClick={() => handleDateClick(original)}
                 shouldDisableDate={shouldDisableDate}
               />
             );

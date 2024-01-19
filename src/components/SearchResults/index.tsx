@@ -1,11 +1,7 @@
 import css from "./style.module.css";
 
 import ProductCard from "../ProductCard";
-import { Product } from "../Container/types";
-
-interface SearchResultProps {
-  products: Product[];
-}
+import { SearchResultProps } from "./types";
 
 export default function SearchResults({ products }: SearchResultProps) {
   const isMobile = window.innerWidth < 768;

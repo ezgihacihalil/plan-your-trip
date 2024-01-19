@@ -1,12 +1,6 @@
 import React from "react";
 import css from "./style.module.css";
-
-interface LoaderProps {
-  color?: string;
-  duration?: number;
-  size?: number;
-  text?: string;
-}
+import { LoaderProps } from "./types";
 
 function Loader({
   color = "#636363",

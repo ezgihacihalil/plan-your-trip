@@ -1,13 +1,8 @@
-import { Product } from "../Container/types";
 import css from "./style.module.css";
 
 import { memo, useMemo } from "react";
 import { calculateDiscountedPrice, generateImageUrl } from "./utils";
-
-interface ProductCardProps {
-  product: Product;
-  isMobile: boolean;
-}
+import { ProductCardProps } from "./types";
 
 const ProductCard: React.FC<ProductCardProps> = memo(
   ({ product, isMobile }) => {

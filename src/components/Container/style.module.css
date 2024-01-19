@@ -48,3 +48,11 @@
   border: 0;
   border-top: 1px solid #e6e6e6;
 }
+
+.noResults {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
