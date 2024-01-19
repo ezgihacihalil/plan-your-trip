@@ -37,11 +37,8 @@ export default function Container() {
     setCity(city);
   }, []);
 
-  if (locationsError || productsError) {
-    return <div>Error</div>;
-  }
-
   const filtersSelected = country && city && date;
+  const hasError = locationsError || productsError;
 
   return (
     <div className={css.pageWrapper}>
@@ -68,8 +65,11 @@ export default function Container() {
         />
         <hr className={css.hrStyle} />
 
-        {!filtersSelected && (
+        {!filtersSelected && !hasError && (
           <div className={css.selectFilterText}>Select filters first</div>
+        )}
+        {!filtersSelected && hasError && (
+          <div className={css.noResults}>Error</div>
         )}
         {productsLoading && (
           <div className={css.loaderContainer}>
@@ -77,7 +77,7 @@ export default function Container() {
           </div>
         )}
         {filtersSelected && products && <SearchResults products={products} />}
-        {filtersSelected && (products?.length === 0) && (
+        {filtersSelected && products?.length === 0 && (
           <div className={css.noResults}>
             Nothing found, please try a different date
           </div>

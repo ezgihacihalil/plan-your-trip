@@ -1,14 +1,11 @@
-import {
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import Container from "../index";
 import { locationData } from "../../../fixtures/locations";
 import { dateData } from "../../../fixtures/dates";
 import { productData } from "../../../fixtures/products";
 
 import userEvent from "@testing-library/user-event";
+let realFetch: typeof fetch;
 
 const findDateButton = (dayOfWeek: string, dayOfMonth: string) => {
   return Array.from(document.querySelectorAll(".dateButton")).find((button) => {
@@ -22,17 +19,19 @@ const findDateButton = (dayOfWeek: string, dayOfMonth: string) => {
 };
 
 describe("Container", () => {
+  beforeEach(() => {
+    realFetch = global.fetch;
+  });
+
+  afterEach(() => {
+    global.fetch = realFetch;
+  });
   beforeAll(() => {
     jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  afterAll(() => {
-    (global.fetch as jest.Mock).mockRestore();
-  });
-
   it("displays the products when the filters are selected", async () => {
     global.fetch = jest.fn((url) => {
-      console.log(url);
       switch (url) {
         case "http://localhost:3001/locations":
           return Promise.resolve({
@@ -54,12 +53,14 @@ describe("Container", () => {
       }
     });
 
-    const { getByLabelText, getByText, queryByText } = render(<Container />);
+    const { getByLabelText, getByText, findByText } = render(<Container />);
 
-    await waitForElementToBeRemoved(() => queryByText("Loading..."));
-
+    await findByText("France");
     userEvent.selectOptions(getByLabelText("Country"), ["France"]);
+
+    await findByText("Paris");
     userEvent.selectOptions(getByLabelText("City"), ["66746"]);
+
     const dateButton = findDateButton("Sat", "31");
 
     if (dateButton) {
@@ -82,14 +83,10 @@ describe("Container", () => {
     );
   });
   it("displays an error message when the fetch call fails", async () => {
-    global.fetch = jest.fn(() =>
-      Promise.reject(new Error("Failed to fetch data"))
-    );
+    global.fetch = jest.fn(() => Promise.reject(new Error("Fetch failed")));
 
-    const { getByText, queryByText } = render(<Container />);
+    const { getByText } = render(<Container />);
 
-    await waitForElementToBeRemoved(() => queryByText("Loading..."));
-
-    expect(getByText("Error")).toBeInTheDocument();
+    await waitFor(() => expect(getByText("Error")).toBeInTheDocument());
   });
 });

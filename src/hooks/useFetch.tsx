@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 
 type FetchMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-type FetchResult<T> = { data: T | null; loading: boolean; error: Error | null };
+type FetchResult<T> = {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+};
 
 function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
   url: string | undefined,
@@ -11,7 +15,7 @@ function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
 ): FetchResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!url) {
@@ -34,7 +38,7 @@ function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
 
         setData(data);
       } catch (error) {
-        setError(error as Error);
+        setError("Error");
       } finally {
         setLoading(false);
       }
