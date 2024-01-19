@@ -13,7 +13,10 @@ const ProductCard: React.FC<ProductCardProps> = memo(
   ({ product, isMobile }) => {
     const discountedPrice = useMemo(
       () =>
-        calculateDiscountedPrice(product.price, product.discount_percentage),
+        calculateDiscountedPrice(
+          product.price,
+          product.discount_percentage ?? null
+        ),
       [product.price, product.discount_percentage]
     );
 

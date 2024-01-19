@@ -25,6 +25,7 @@ function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
           method,
           body: body ? JSON.stringify(body) : null,
         });
+
         if (!response.ok) {
           throw new Error(`Something went wrong: ${response.status}`);
         }

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import css from "./style.module.css";
 import useFetch from "../../hooks/useFetch";
 import { AVAILABLE_DATES } from "../Filter/constants";
-import { DateSelectionProps } from "./types";
+import { DateSelectionProps, FormattedDateType } from "./types";
 import { formatDate } from "./utils";
 import DateButton from "../DateButton";
 
@@ -39,12 +39,18 @@ const DateSelection: React.FC<DateSelectionProps> = React.memo(
           Date
         </label>
         <div className={css.dateButtons}>
-          {formattedDates?.map(({ formatted, original }) => {
+          {formattedDates?.map((date: FormattedDateType | null) => {
+            if (date === null) {
+              return null;
+            }
+
+            const { formatted, original } = date;
             return (
               <DateButton
                 key={original}
                 formatted={formatted}
-                isSelected={original === selectedDate}
+                original={original}
+                selectedDate={selectedDate}
                 handleDateClick={() => handleDateClick(formatted, original)}
                 shouldDisableDate={shouldDisableDate}
               />

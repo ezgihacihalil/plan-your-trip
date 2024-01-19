@@ -19,5 +19,9 @@ export function calculateDiscountedPrice(
   price: number,
   discountPercentage: number | null
 ): number | null {
+  if (discountPercentage === null || discountPercentage === 0) {
+    return price;
+  }
+
   return discountPercentage ? price - (price * discountPercentage) / 100 : null;
 }

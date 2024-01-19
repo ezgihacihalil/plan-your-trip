@@ -3,11 +3,18 @@ import css from "./style.module.css";
 
 const DateButton: React.FC<{
   formatted: string;
-  isSelected: boolean;
+  selectedDate: string;
+  original: string;
   handleDateClick: () => void;
   shouldDisableDate: boolean;
 }> = React.memo(
-  ({ formatted, isSelected, handleDateClick, shouldDisableDate }) => {
+  ({
+    formatted,
+    selectedDate,
+    original,
+    handleDateClick,
+    shouldDisableDate,
+  }) => {
     const [dayOfWeek, dayOfMonth] = formatted.split(" ");
     const isNewMonth = dayOfMonth === "1";
 
@@ -24,7 +31,9 @@ const DateButton: React.FC<{
         )}
         <button
           key={formatted}
-          className={`${css.dateButton} ${isSelected ? css.selected : ""}`}
+          className={`${css.dateButton} ${
+            original === selectedDate ? css.selected : ""
+          }`}
           onClick={handleDateClick}
           disabled={shouldDisableDate}
         >

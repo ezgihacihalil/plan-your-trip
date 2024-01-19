@@ -23,7 +23,7 @@ function Filter({ options, label, onChange, disabled, isCity }: FilterProps) {
           <option value="">Choose the {label.toLowerCase()}</option>
           {options.map((option) => (
             <option
-                key={(isCity ? option[0] : option).toString()}
+              key={(isCity ? option[0] : option).toString()}
               value={isCity ? option[0].toString() : option.toString()}
             >
               {isCity ? option[1] : option}
