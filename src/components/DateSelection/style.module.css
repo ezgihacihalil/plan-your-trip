@@ -1,6 +1,17 @@
 .dateSelection {
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  ::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -28%;
+    height: 1px;
+    width: 100%;
+    background-color: #e6e6e6;
+  }
 }
 
 .disabled {
@@ -19,68 +30,4 @@
   margin-bottom: 10px;
   gap: 4px;
   align-items: stretch;
-}
-
-.dateButton {
-  font-family: "Roboto Mono";
-  flex: 0 0 20%;
-  margin-top: 8px;
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 8px;
-  padding: 16px 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  max-width: calc(100% / 5);
-  position: relative;
-
-  @media (min-width: 376px) {
-    max-width: calc(100% / 8 - 5px);
-  }
-}
-
-.dateButton:disabled {
-  opacity: 0.5;
-  cursor: none;
-  border: 1px solid #e6e6e6;
-}
-
-.dayOfWeek {
-  font-size: 12px;
-  letter-spacing: 0.6px;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.dayOfMonth {
-  font-size: 24px;
-  letter-spacing: 0.6px;
-  font-weight: 500;
-  line-height: 32px;
-}
-
-.monthDividerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-height: 82px;
-  margin-top: 8px;
-}
-
-.monthDivider {
-  height: 40px;
-  width: 1px;
-  background-color: #000;
-}
-
-.disabledMonthDivider {
-  background-color: #e6e6e6;
-}
-
-.selected {
-  background: #9b51e0;
-  color: #fff;
 }

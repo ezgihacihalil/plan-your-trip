@@ -4,9 +4,8 @@
   flex-direction: column;
   align-items: center;
   background-color: #333333;
-  position: fixed;
-  bottom: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .footer span {

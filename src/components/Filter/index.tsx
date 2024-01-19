@@ -1,13 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import css from "./style.module.css";
-
-interface FilterProps {
-  options: Location[] | string[];
-  label: string;
-  onChange: (value: string) => void;
-  disabled?: boolean;
-  isCity?: boolean;
-}
+import { FilterProps } from "./types";
 
 function Filter({ options, label, onChange, disabled, isCity }: FilterProps) {
   const [value, setValue] = useState("");
@@ -16,8 +9,6 @@ function Filter({ options, label, onChange, disabled, isCity }: FilterProps) {
     setValue(e.target.value);
     onChange(e.target.value);
   };
-
-  console.log(options);
 
   return (
     <div className={css.filter}>
@@ -32,15 +23,10 @@ function Filter({ options, label, onChange, disabled, isCity }: FilterProps) {
           <option value="">Choose the {label.toLowerCase()}</option>
           {options.map((option) => (
             <option
-              // @ts-ignore
-              key={isCity ? option[0] : option}
-              // @ts-ignore
-              value={isCity ? option[0] : option}
+                key={(isCity ? option[0] : option).toString()}
+              value={isCity ? option[0].toString() : option.toString()}
             >
-              {
-                // @ts-ignore
-                isCity ? option[1] : option
-              }
+              {isCity ? option[1] : option}
             </option>
           ))}
         </select>

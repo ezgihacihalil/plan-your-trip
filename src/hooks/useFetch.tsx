@@ -5,7 +5,7 @@ type FetchMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 type FetchResult<T> = { data: T | null; loading: boolean; error: Error | null };
 
 function useFetch<T = unknown, B extends Record<string, unknown> | null = null>(
-  url: string,
+  url: string | undefined,
   method: FetchMethod = "GET",
   body: B = null as B
 ): FetchResult<T> {

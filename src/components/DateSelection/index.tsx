@@ -1,80 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import css from "./style.module.css";
 import useFetch from "../../hooks/useFetch";
+import { AVAILABLE_DATES } from "../Filter/constants";
+import { DateSelectionProps } from "./types";
+import { formatDate } from "./utils";
+import DateButton from "../DateButton";
 
-interface DateSelectionProps {
-  disabled: boolean;
-  setDate: (date: string) => void;
-}
+const DateSelection: React.FC<DateSelectionProps> = React.memo(
+  ({ setDate, disabled }) => {
+    const {
+      data: dateResponse,
+      loading: datesLoading,
+      error: datesError,
+    } = useFetch<string[]>(AVAILABLE_DATES);
 
-const DateSelection: React.FC<DateSelectionProps> = ({ setDate, disabled }) => {
-  const {
-    data: dateResponse,
-    loading: datesLoading,
-    error: datesError,
-  } = useFetch<string[]>("http://localhost:3001/available_dates");
+    const [selectedDate, setSelectedDate] = useState("");
 
-  const [selectedDate, setSelectedDate] = useState("");
+    const formattedDates = useMemo(
+      () =>
+        dateResponse?.map((date) => {
+          return formatDate(date);
+        }),
+      [dateResponse, formatDate]
+    );
 
-  const formattedDates = dateResponse?.map((date) => {
-    const dateObj = new Date(date);
-    const dayOfMonth = dateObj.toLocaleDateString(undefined, {
-      day: "numeric",
-    });
-    const dayOfWeek = dateObj.toLocaleDateString(undefined, {
-      weekday: "short",
-    });
+    const handleDateClick = (date: string, originalDate: string) => {
+      setSelectedDate(originalDate);
+      setDate(originalDate);
+    };
 
-    return { formatted: `${dayOfWeek} ${dayOfMonth}`, original: date };
-  });
+    const shouldDisableDate = !!datesError || datesLoading || disabled;
 
-  const handleDateClick = (date: string, originalDate: string) => {
-    setSelectedDate(originalDate);
-    setDate(originalDate);
-  };
-
-  const shouldDisableDate = !!datesError || datesLoading || disabled;
-
-  return (
-    <div className={css.dateSelection}>
-      <label
-        className={`${css.label} ${shouldDisableDate ? css.disabled : ""}`}
-      >
-        Date
-      </label>
-      <div className={css.dateButtons}>
-        {formattedDates?.map(({ formatted, original }) => {
-          const [dayOfWeek, dayOfMonth] = formatted.split(" ");
-          const isNewMonth = dayOfMonth === "1";
-
-          return (
-            <>
-              {isNewMonth && (
-                <div className={css.monthDividerContainer}>
-                  <div
-                    className={`${css.monthDivider} ${
-                      shouldDisableDate ? css.disabledMonthDivider : ""
-                    }`}
-                  />
-                </div>
-              )}
-              <button
+    return (
+      <div className={css.dateSelection}>
+        <label
+          className={`${css.label} ${shouldDisableDate ? css.disabled : ""}`}
+        >
+          Date
+        </label>
+        <div className={css.dateButtons}>
+          {formattedDates?.map(({ formatted, original }) => {
+            return (
+              <DateButton
                 key={original}
-                className={`${css.dateButton} ${
-                  original === selectedDate ? css.selected : ""
-                }`}
-                onClick={() => handleDateClick(formatted, original)}
-                disabled={shouldDisableDate}
-              >
-                <span className={css.dayOfWeek}>{dayOfWeek}</span>
-                <span className={css.dayOfMonth}>{dayOfMonth}</span>
-              </button>
-            </>
-          );
-        })}
+                formatted={formatted}
+                isSelected={original === selectedDate}
+                handleDateClick={() => handleDateClick(formatted, original)}
+                shouldDisableDate={shouldDisableDate}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default DateSelection;
